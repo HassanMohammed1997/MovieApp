@@ -1,5 +1,11 @@
 package com.hassanmohammed.movieapp.ui.fragment
 
+import android.app.SearchManager
+import android.content.Context
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.hassanmohammed.movieapp.R
@@ -10,6 +16,7 @@ import com.hassanmohammed.movieapp.databinding.FragmentMovieDetailsBinding
 import com.hassanmohammed.movieapp.ui.BaseFragment
 import com.hassanmohammed.movieapp.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MovieDetailsFragment :
@@ -73,5 +80,6 @@ class MovieDetailsFragment :
     private fun getMovieDetails() = apply { mainViewModel.getMovieDetails(args.movieID) }
 
     private fun getMovieCredit() = apply { mainViewModel.getMovieCredit(args.movieID) }
+
 
 }

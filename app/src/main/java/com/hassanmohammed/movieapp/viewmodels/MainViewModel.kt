@@ -42,4 +42,9 @@ class MainViewModel @Inject constructor(
         _movieCredit.value = NetworkResult.Loading()
         _movieCredit.value = mainRepository.getMovieCredit(movieID)
     }
+
+    fun search(query: String) = viewModelScope.launch {
+        _movies.value = NetworkResult.Loading()
+        _movies.value = mainRepository.search(query)
+    }
 }

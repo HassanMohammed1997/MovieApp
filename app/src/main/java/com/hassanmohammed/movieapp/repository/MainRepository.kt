@@ -17,4 +17,6 @@ class MainRepository @Inject constructor(
 
     suspend fun getMovieCredit(movieID: Int) = safeApiCall { remoteDataSource.getMovieCredit(movieID) }
 
+    suspend fun search(query: String) = safeApiCall { remoteDataSource.search(query) }
+
 }

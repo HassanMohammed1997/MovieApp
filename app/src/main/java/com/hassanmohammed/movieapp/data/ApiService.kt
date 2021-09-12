@@ -27,4 +27,10 @@ interface ApiService {
         @Query("api_key") apiKey: String = API_KEY
     ): CreditResponse
 
+    @GET("search/movie")
+    suspend fun search(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String = API_KEY,
+    ): MovieResponse
+
 }
