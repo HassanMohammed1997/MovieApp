@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/list_item_credit.xml" value="0.2764102564102564" />
         <entry key="app/src/main/res/layout/list_item_genre.xml" value="0.2764102564102564" />
         <entry key="app/src/main/res/layout/list_item_movie.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/repos_load_state_footer_view_item.xml" value="0.2764102564102564" />
         <entry key="app/src/main/res/menu/menu_discover_movies.xml" value="0.2764102564102564" />
       </map>
     </option>

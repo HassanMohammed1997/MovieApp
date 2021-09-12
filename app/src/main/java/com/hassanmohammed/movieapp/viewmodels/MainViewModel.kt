@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.hassanmohammed.movieapp.data.NetworkResult
 import com.hassanmohammed.movieapp.models.CreditResponse
 import com.hassanmohammed.movieapp.models.MovieDetailsResponse
 import com.hassanmohammed.movieapp.models.MovieResponse
 import com.hassanmohammed.movieapp.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,10 +30,13 @@ class MainViewModel @Inject constructor(
     private val _movieCredit: MutableLiveData<NetworkResult<CreditResponse>> = MutableLiveData()
     val movieCredit: LiveData<NetworkResult<CreditResponse>> get() = _movieCredit
 
-    fun discoverMovies() = viewModelScope.launch {
+    fun discoverMovies() : Flow<PagingData<MovieResponse.MovieResult>> = mainRepository.discoverMovies()
+        .cachedIn(viewModelScope)
+
+/*    fun discoverMovies() = viewModelScope.launch {
         _movies.value = NetworkResult.Loading()
         _movies.value = mainRepository.discoverMovies()
-    }
+    }*/
 
     fun getMovieDetails(movieID: Int) = viewModelScope.launch {
         _movieDetails.value = NetworkResult.Loading()

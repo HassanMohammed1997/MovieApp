@@ -6,7 +6,7 @@ class RemoteDataSource @Inject constructor(
     private val service: ApiService
 ) {
 
-    suspend fun discoverMovies() = service.discoverMovies()
+    suspend fun discoverMovies(page: Int) = service.discoverMovies(page = page)
 
     suspend fun getMovieDetails(movieID: Int) = service.getMovieDetails(movieID)
 

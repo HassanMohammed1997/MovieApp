@@ -5,15 +5,20 @@ import android.content.Context
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.hassanmohammed.movieapp.R
 import com.hassanmohammed.movieapp.adapters.MovieAdapter
-import com.hassanmohammed.movieapp.data.NetworkResult
+import com.hassanmohammed.movieapp.adapters.MoviesLoadStateAdapter
 import com.hassanmohammed.movieapp.databinding.FragmentDiscoverMoviesBinding
 import com.hassanmohammed.movieapp.ui.BaseFragment
 import com.hassanmohammed.movieapp.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DiscoverMoviesFragment :
@@ -22,24 +27,19 @@ class DiscoverMoviesFragment :
     private val movieAdapter by lazy { MovieAdapter() }
     override fun init() {
         setHasOptionsMenu(true)
-        binding.movieAdapter = movieAdapter
+        binding.movies.adapter = movieAdapter.withLoadStateHeaderAndFooter(
+            header = MoviesLoadStateAdapter { movieAdapter.retry() },
+            footer = MoviesLoadStateAdapter { movieAdapter.retry() }
+        )
         getMovies()
     }
 
     override fun subscribeObservers() {
-        mainViewModel.movies.observe(viewLifecycleOwner, {
-            when (it) {
-                is NetworkResult.Error -> {
-                    binding.isLoading = false
-                    it.errorMessage?.showErrorMessage()
-                }
-                is NetworkResult.Loading -> binding.isLoading = true
-                is NetworkResult.Success -> {
-                    binding.isLoading = false
-                    movieAdapter.submitList(it.data?.movieResults)
-                }
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.discoverMovies().collect {
+                movieAdapter.submitData(it)
             }
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -78,6 +78,22 @@ class DiscoverMoviesFragment :
     }
 
     override fun setListeners() {
+        lifecycleScope.launch {
+            movieAdapter.loadStateFlow.collect { loadState ->
+                binding.isLoading = loadState.source.refresh is LoadState.Loading
+                val errorState = loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+                    ?: loadState.append as? LoadState.Error
+                    ?: loadState.prepend as? LoadState.Error
+                errorState?.let {
+                    Toast.makeText(
+                        requireContext(),
+                        "\\uD83D\\uDE28 Wooops ${it.error}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun getMovies() = apply { mainViewModel.discoverMovies() }

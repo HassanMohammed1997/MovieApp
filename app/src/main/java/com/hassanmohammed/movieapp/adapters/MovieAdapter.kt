@@ -3,6 +3,7 @@ package com.hassanmohammed.movieapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hassanmohammed.movieapp.adapters.diffutils.MovieDiffUtil
@@ -10,12 +11,13 @@ import com.hassanmohammed.movieapp.databinding.ListItemMovieBinding
 import com.hassanmohammed.movieapp.models.MovieResponse
 import com.hassanmohammed.movieapp.ui.fragment.DiscoverMoviesFragmentDirections
 
-class MovieAdapter : ListAdapter<MovieResponse.MovieResult, MovieViewHolder>(MovieDiffUtil()) {
+class MovieAdapter : PagingDataAdapter<MovieResponse.MovieResult, MovieViewHolder>(MovieDiffUtil()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder =
         MovieViewHolder.getViewHolder(parent)
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) =
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
 }
 
 class MovieViewHolder(private val binding: ListItemMovieBinding) :

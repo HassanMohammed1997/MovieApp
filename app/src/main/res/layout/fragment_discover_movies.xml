@@ -22,12 +22,11 @@
         tools:context=".ui.fragment.DiscoverMoviesFragment">
 
         <androidx.recyclerview.widget.RecyclerView
-            viewGone="@{isLoading}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/movies"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
-            setAdapter="@{movieAdapter}"
             tools:listitem="@layout/list_item_movie" />
 
         <ProgressBar
