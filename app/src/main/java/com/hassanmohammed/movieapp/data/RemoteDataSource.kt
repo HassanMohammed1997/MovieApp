@@ -12,5 +12,5 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun getMovieCredit(movieID: Int) = service.getMovieCredit(movieID)
 
-    suspend fun search(query: String) = service.search(query)
+    suspend fun search(query: String, page: Int) = service.search(query, page)
 }

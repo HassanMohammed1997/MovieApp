@@ -1,6 +1,10 @@
 package com.hassanmohammed.movieapp.utils
 
-import android.util.Log
+import android.app.Activity
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import com.hassanmohammed.movieapp.data.NetworkResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -24,3 +28,16 @@ suspend fun <T> safeApiCall(
         }
     }
 }
+
+fun Fragment.hideSoftKeyboard() {
+    val imm =
+        requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    var view = requireActivity().currentFocus
+    if (view == null) {
+        view = View(activity);
+    }
+    imm.hideSoftInputFromWindow(view.windowToken, 0);
+}
+
+fun Activity.disableNightMode() =
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

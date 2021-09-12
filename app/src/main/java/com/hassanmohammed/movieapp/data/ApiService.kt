@@ -13,25 +13,22 @@ interface ApiService {
     @GET("discover/movie")
     suspend fun discoverMovies(
         @Query("page") page: Int = 1,
-        @Query("api_key") key: String = API_KEY
     ): MovieResponse
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
         @Path("movie_id") movieID: Int,
-        @Query("api_key") apiKey: String = API_KEY
     ): MovieDetailsResponse
 
     @GET("movie/{movie_id}/credits")
     suspend fun getMovieCredit(
         @Path("movie_id") movieID: Int,
-        @Query("api_key") apiKey: String = API_KEY
     ): CreditResponse
 
     @GET("search/movie")
     suspend fun search(
         @Query("query") query: String,
-        @Query("api_key") apiKey: String = API_KEY,
+        @Query("page") page: Int = 1,
     ): MovieResponse
 
 }

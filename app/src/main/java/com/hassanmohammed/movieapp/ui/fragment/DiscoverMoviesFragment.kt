@@ -15,6 +15,7 @@ import com.hassanmohammed.movieapp.adapters.MovieAdapter
 import com.hassanmohammed.movieapp.adapters.MoviesLoadStateAdapter
 import com.hassanmohammed.movieapp.databinding.FragmentDiscoverMoviesBinding
 import com.hassanmohammed.movieapp.ui.BaseFragment
+import com.hassanmohammed.movieapp.utils.hideSoftKeyboard
 import com.hassanmohammed.movieapp.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -31,15 +32,10 @@ class DiscoverMoviesFragment :
             header = MoviesLoadStateAdapter { movieAdapter.retry() },
             footer = MoviesLoadStateAdapter { movieAdapter.retry() }
         )
-        getMovies()
+        getMoviesOrSearch()
     }
 
     override fun subscribeObservers() {
-        lifecycleScope.launchWhenStarted {
-            mainViewModel.discoverMovies().collect {
-                movieAdapter.submitData(it)
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -58,9 +54,10 @@ class DiscoverMoviesFragment :
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                hideSoftKeyboard()
                 query?.let {
                     if (it.isNotEmpty())
-                        search(query)
+                        getMoviesOrSearch(query)
                 }
                 return true
             }
@@ -71,7 +68,8 @@ class DiscoverMoviesFragment :
 
         })
         searchView.setOnCloseListener {
-            getMovies()
+            hideSoftKeyboard()
+            getMoviesOrSearch()
             false
         }
         super.onPrepareOptionsMenu(menu)
@@ -96,9 +94,13 @@ class DiscoverMoviesFragment :
         }
     }
 
-    private fun getMovies() = apply { mainViewModel.discoverMovies() }
-
-    private fun search(query: String) = apply { mainViewModel.search(query) }
+    private fun getMoviesOrSearch(query: String? = null) {
+        lifecycleScope.launchWhenCreated {
+            mainViewModel.discoverMovies(query).collect {
+                movieAdapter.submitData(it)
+            }
+        }
+    }
 
 
 }

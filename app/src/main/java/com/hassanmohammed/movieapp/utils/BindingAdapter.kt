@@ -17,7 +17,6 @@ class BindingAdapter {
         @BindingAdapter("viewGone")
         @JvmStatic
         fun viewGone(view: View, gone: Boolean) {
-            Log.d("TAG", "viewGone: $gone")
             view.visibility = if (gone) View.GONE else View.VISIBLE
         }
 
@@ -86,6 +85,7 @@ class BindingAdapter {
         ) {
             this.run {
                 this.adapter = adapter
+                setHasFixedSize(true)
             }
         }
     }

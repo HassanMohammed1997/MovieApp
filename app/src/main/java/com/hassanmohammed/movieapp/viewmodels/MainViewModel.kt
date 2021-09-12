@@ -30,13 +30,9 @@ class MainViewModel @Inject constructor(
     private val _movieCredit: MutableLiveData<NetworkResult<CreditResponse>> = MutableLiveData()
     val movieCredit: LiveData<NetworkResult<CreditResponse>> get() = _movieCredit
 
-    fun discoverMovies() : Flow<PagingData<MovieResponse.MovieResult>> = mainRepository.discoverMovies()
+    fun discoverMovies(query: String?) : Flow<PagingData<MovieResponse.MovieResult>> = mainRepository.discoverMovies(query)
         .cachedIn(viewModelScope)
 
-/*    fun discoverMovies() = viewModelScope.launch {
-        _movies.value = NetworkResult.Loading()
-        _movies.value = mainRepository.discoverMovies()
-    }*/
 
     fun getMovieDetails(movieID: Int) = viewModelScope.launch {
         _movieDetails.value = NetworkResult.Loading()
@@ -47,10 +43,5 @@ class MainViewModel @Inject constructor(
     fun getMovieCredit(movieID: Int) = viewModelScope.launch {
         _movieCredit.value = NetworkResult.Loading()
         _movieCredit.value = mainRepository.getMovieCredit(movieID)
-    }
-
-    fun search(query: String) = viewModelScope.launch {
-        _movies.value = NetworkResult.Loading()
-        _movies.value = mainRepository.search(query)
     }
 }

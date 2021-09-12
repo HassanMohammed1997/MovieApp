@@ -7,12 +7,12 @@ import com.hassanmohammed.movieapp.utils.NETWORK_PAGE_SIZE
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
-import javax.inject.Singleton
 
 private const val STARTING_PAGE_INDEX = 1
 
 class MoviePagingDataSource @Inject constructor(
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val query: String? = null
 ) : PagingSource<Int, MovieResponse.MovieResult>() {
     override fun getRefreshKey(state: PagingState<Int, MovieResponse.MovieResult>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -24,7 +24,11 @@ class MoviePagingDataSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResponse.MovieResult> {
         val position = params.key ?: STARTING_PAGE_INDEX
         return try {
-            val response = remoteDataSource.discoverMovies(position)
+            val response =
+                if (query.isNullOrBlank()) remoteDataSource.discoverMovies(position) else remoteDataSource.search(
+                    query,
+                    position
+                )
             val repos = response.movieResults
             val nextKey = if (repos.isEmpty()) {
                 null

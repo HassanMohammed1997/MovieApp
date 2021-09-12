@@ -17,25 +17,21 @@ class MainRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ) {
 
-    fun discoverMovies(): Flow<PagingData<MovieResponse.MovieResult>> {
+    fun discoverMovies(query: String?): Flow<PagingData<MovieResponse.MovieResult>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { MoviePagingDataSource(remoteDataSource) }
+            pagingSourceFactory = { MoviePagingDataSource(remoteDataSource, query) }
         ).flow
 
     }
-
-//    suspend fun discoverMovies() = safeApiCall { remoteDataSource.discoverMovies() }
 
     suspend fun getMovieDetails(movieID: Int) =
         safeApiCall { remoteDataSource.getMovieDetails(movieID) }
 
     suspend fun getMovieCredit(movieID: Int) =
         safeApiCall { remoteDataSource.getMovieCredit(movieID) }
-
-    suspend fun search(query: String) = safeApiCall { remoteDataSource.search(query) }
 
 }
