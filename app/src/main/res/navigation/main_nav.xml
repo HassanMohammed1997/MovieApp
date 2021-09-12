@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_discover_movies" >
         <action
             android:id="@+id/action_discoverMoviesFragment_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragment" />
+            app:destination="@id/movieDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/movieDetailsFragment"
@@ -22,5 +26,17 @@
         <argument
             android:name="movieID"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_imageViewFullScreenDialog"
+            app:destination="@id/imageViewFullScreenDialog" />
     </fragment>
+    <dialog
+        android:id="@+id/imageViewFullScreenDialog"
+        android:name="com.hassanmohammed.movieapp.ui.fragment.ImageViewFullScreenDialog"
+        android:label="ImageViewFullScreenDialog" >
+        <argument
+            android:name="imageUrl"
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
 </navigation>

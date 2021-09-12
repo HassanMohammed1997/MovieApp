@@ -1,12 +1,7 @@
 package com.hassanmohammed.movieapp.ui.fragment
 
-import android.app.SearchManager
-import android.content.Context
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.inputmethod.EditorInfo
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hassanmohammed.movieapp.R
 import com.hassanmohammed.movieapp.adapters.CastAdapter
@@ -24,6 +19,7 @@ class MovieDetailsFragment :
     private val mainViewModel by viewModels<MainViewModel>()
     private val crewAdapter by lazy { CrewAdapter() }
     private val castAdapter by lazy { CastAdapter() }
+    private var imageUrl: String? = ""
 
     private val args by navArgs<MovieDetailsFragmentArgs>()
     override fun init() {
@@ -43,6 +39,7 @@ class MovieDetailsFragment :
                 is NetworkResult.Loading -> binding.isLoading = true
                 is NetworkResult.Success -> {
                     binding.isLoading = false
+                    imageUrl = it.data?.posterPath
                     binding.movieDetails = it.data
                 }
             }
@@ -73,6 +70,14 @@ class MovieDetailsFragment :
                 binding.readMoreTxt.text = getString(R.string.read_less)
                 expandableLayout.expand()
             }
+        }
+
+        binding.movieImage.setOnClickListener {
+            val action =
+                MovieDetailsFragmentDirections.actionMovieDetailsFragmentToImageViewFullScreenDialog(
+                    imageUrl
+                )
+            findNavController().navigate(action)
         }
 
     }
